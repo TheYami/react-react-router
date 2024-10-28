@@ -1,6 +1,31 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 function CreateProductForm() {
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState(0);
+  const [content, setContent] = useState("");
+  const [image, setImage] = useState("");
+  const navigate = useNavigate();
+
+  const addProduct = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`http://localhost:4001/products/`, {name, price, content, image});
+      navigate("/")
+    } catch (error) {
+
+    }
+    alert(JSON.stringify(response));
+  };
+
+  useEffect(() => {
+    addProduct();
+  })
+
   return (
-    <form className="product-form">
+    <form onSubmit={addProduct} className="product-form">
       <h1>Create Product Form</h1>
       <div className="input-container">
         <label>
@@ -10,7 +35,10 @@ function CreateProductForm() {
             name="name"
             type="text"
             placeholder="Enter name here"
-            onChange={() => {}}
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value);
+            }}
           />
         </label>
       </div>
@@ -22,7 +50,9 @@ function CreateProductForm() {
             name="image"
             type="text"
             placeholder="Enter image url here"
-            onChange={() => {}}
+            onChange={(event) => {
+              setImage(event.target.value);
+            }}
           />
         </label>
       </div>
@@ -34,7 +64,9 @@ function CreateProductForm() {
             name="price"
             type="number"
             placeholder="Enter price here"
-            onChange={() => {}}
+            onChange={(event) => {
+              setPrice(event.target.value);
+            }}
           />
         </label>
       </div>
@@ -46,7 +78,9 @@ function CreateProductForm() {
             name="description"
             type="text"
             placeholder="Enter description here"
-            onChange={() => {}}
+            onChange={(event) => {
+              setContent(event.target.value);
+            }}
             rows={4}
             cols={30}
           />
