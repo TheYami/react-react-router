@@ -1,6 +1,21 @@
-function EditProductForm() {
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+function EditProductForm({ onEdit }) {
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState(0);
+  const [image, setImage] = useState("");
+  const [description, setDescription] = useState("");
+
+  const editSubmit = (event) => {
+    event.preventDefault();
+    onEdit({ name, price, image, description });
+    navigate("/");
+  };
+
   return (
-    <form className="product-form">
+    <form onSubmit={editSubmit} className="product-form">
       <h1>Edit Product Form</h1>
       <div className="input-container">
         <label>
@@ -10,7 +25,9 @@ function EditProductForm() {
             name="name"
             type="text"
             placeholder="Enter name here"
-            onChange={() => {}}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
           />
         </label>
       </div>
@@ -22,7 +39,9 @@ function EditProductForm() {
             name="image"
             type="text"
             placeholder="Enter image url here"
-            onChange={() => {}}
+            onChange={(e) => {
+              setImage(e.target.value);
+            }}
           />
         </label>
       </div>
@@ -34,7 +53,9 @@ function EditProductForm() {
             name="price"
             type="number"
             placeholder="Enter price here"
-            onChange={() => {}}
+            onChange={(e) => {
+              setPrice(e.target.value);
+            }}
           />
         </label>
       </div>
@@ -46,7 +67,9 @@ function EditProductForm() {
             name="description"
             type="text"
             placeholder="Enter description here"
-            onChange={() => {}}
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
             rows={4}
             cols={30}
           />
