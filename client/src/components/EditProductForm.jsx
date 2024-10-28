@@ -1,17 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 function EditProductForm({ onEdit }) {
   const navigate = useNavigate();
+  const param = useParams();
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
 
-  const editSubmit = (event) => {
+  const editSubmit = async (event) => {
     event.preventDefault();
-    onEdit({ name, price, image, description });
+    await onEdit({ name, price, image, description });
     navigate("/");
+  };
+
+  useEffect(() => {
+    getProduct();
+  }, []);
+
+  const getProduct = async () => {
+    const response = await axios.get(
+      `http://localhost:4001/products/${param.id}`
+    );
+    setName(response.data.data.name);
+    setImage(response.data.data.image);
+    setPrice(response.data.data.price);
+    setDescription(response.data.data.description);
   };
 
   return (
@@ -25,6 +41,7 @@ function EditProductForm({ onEdit }) {
             name="name"
             type="text"
             placeholder="Enter name here"
+            value={name}
             onChange={(e) => {
               setName(e.target.value);
             }}
@@ -39,6 +56,7 @@ function EditProductForm({ onEdit }) {
             name="image"
             type="text"
             placeholder="Enter image url here"
+            value={image}
             onChange={(e) => {
               setImage(e.target.value);
             }}
@@ -53,6 +71,7 @@ function EditProductForm({ onEdit }) {
             name="price"
             type="number"
             placeholder="Enter price here"
+            value={price}
             onChange={(e) => {
               setPrice(e.target.value);
             }}
@@ -67,6 +86,7 @@ function EditProductForm({ onEdit }) {
             name="description"
             type="text"
             placeholder="Enter description here"
+            value={description}
             onChange={(e) => {
               setDescription(e.target.value);
             }}
