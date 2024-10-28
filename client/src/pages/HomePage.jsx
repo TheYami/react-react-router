@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function HomePage() {
   const [products, setProducts] = useState([]);
@@ -21,16 +22,25 @@ function HomePage() {
   useEffect(() => {
     getProducts();
   }, []);
+
+  const deleteProduct = async (id) =>{
+    try{
+      await axios.delete(`http://localhost:4001/products/${id}`);
+      getProducts();
+    }catch(error){
+      console.log("Fail to delete Product" + error);
+    }
+  }
   return (
     <div>
       <div className="app-wrapper">
         <h1 className="app-title">Products</h1>
-        <button>Create Product</button>
+        <Link to={'/CreateProductPage'} className="btn">Create Product</Link>
       </div>
       <div className="product-list">
         {products.map((product) => {
           return (
-            <div className="product">
+            <div className="product" key={product.id}>
               <div className="product-preview">
                 <img
                   src="https://via.placeholder.com/250/250"
@@ -44,12 +54,12 @@ function HomePage() {
                 <h2>Product price: {product.price}</h2>
                 <p>Product description: {product.description} </p>
                 <div className="product-actions">
-                  <button className="view-button">View</button>
-                  <button className="edit-button">Edit</button>
+                  <Link to={`/product/view/${product.id}`} className="view-button view-btn">View</Link>
+                  <Link to={`/product/edit/${product.id}`} className="edit-button btn-edit">Edit</Link>
                 </div>
               </div>
 
-              <button className="delete-button">x</button>
+              <button className="delete-button" onClick={()=>{deleteProduct(product.id)}}>x</button>
             </div>
           );
         })}

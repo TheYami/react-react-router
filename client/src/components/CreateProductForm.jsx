@@ -1,6 +1,42 @@
+import axios from "axios";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 function CreateProductForm() {
+
+  const navigate = useNavigate();
+
+  const [name,setName] = useState('');
+  const [imageUrl,setImageUrl] = useState('');
+  const [price,setPrice] = useState('');
+  const [description,setDescription] = useState('');
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const newProduct = {
+      "name": name,
+      "price": price,
+      "image": imageUrl,
+      "description":description
+    }
+
+    try{
+      await axios.post("http://localhost:4001/products",newProduct);
+      setName('');
+      setImageUrl('');
+      setPrice('');
+      setDescription('')
+      navigate('/')
+
+    }catch(error){
+      console.log("Fail to create Product" + error);
+    }
+  }
+
   return (
-    <form className="product-form">
+    <form className="product-form" onSubmit={handleSubmit}>
       <h1>Create Product Form</h1>
       <div className="input-container">
         <label>
@@ -10,10 +46,12 @@ function CreateProductForm() {
             name="name"
             type="text"
             placeholder="Enter name here"
-            onChange={() => {}}
+            value={name}
+            onChange={(e) => {setName(e.target.value)}}
           />
         </label>
       </div>
+
       <div className="input-container">
         <label>
           Image Url
@@ -22,10 +60,12 @@ function CreateProductForm() {
             name="image"
             type="text"
             placeholder="Enter image url here"
-            onChange={() => {}}
+            value={imageUrl}
+            onChange={(e) => {setImageUrl(e.target.value)}}
           />
         </label>
       </div>
+
       <div className="input-container">
         <label>
           Price
@@ -34,10 +74,12 @@ function CreateProductForm() {
             name="price"
             type="number"
             placeholder="Enter price here"
-            onChange={() => {}}
+            value={price}
+            onChange={(e) => {setPrice(e.target.value)}}
           />
         </label>
       </div>
+
       <div className="input-container">
         <label>
           Description
@@ -46,12 +88,14 @@ function CreateProductForm() {
             name="description"
             type="text"
             placeholder="Enter description here"
-            onChange={() => {}}
+            value={description}
+            onChange={(e) => {setDescription(e.target.value)}}
             rows={4}
             cols={30}
           />
         </label>
       </div>
+
       <div className="form-actions">
         <button type="submit">Create</button>
       </div>
